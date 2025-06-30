@@ -1,8 +1,8 @@
-# app/main_deepseek.py - 安全的 DeepSeek API 集成版本
+# app/main_deepseek.py - 修复类型错误的安全版本
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, Tuple
 import asyncio
 import time
 import httpx
@@ -44,7 +44,7 @@ app.add_middleware(
 # 数据模型
 class TextRequest(BaseModel):
     content: str = Field(..., min_length=1, max_length=10000, description="要处理的文本内容")
-    style: Optional[str] = Field(default="academic", description="润色风格：academic, formal, casual, creative")
+    style: str = Field(default="academic", description="润色风格：academic, formal, casual, creative")
 
 class ProcessResult(BaseModel):
     original_text: str = Field(description="原始文本")
@@ -64,13 +64,14 @@ class DeepSeekClient:
     def __init__(self):
         self.api_key = DEEPSEEK_API_KEY
         self.base_url = DEEPSEEK_BASE_URL
-        self.client = httpx.AsyncClient(timeout=30.0) if self.api_key else None
+        # 修复：只有在有API密钥时才创建client
+        self.client: Optional[httpx.AsyncClient] = httpx.AsyncClient(timeout=30.0) if self.api_key else None
     
-    async def polish_text(self, text: str, style: str) -> tuple[str, str]:
+    async def polish_text(self, text: str, style: str) -> Tuple[str, str]:
         """使用 DeepSeek API 润色文本"""
         
         # 如果没有API密钥，使用模拟模式
-        if not self.api_key:
+        if not self.api_key or not self.client:
             return self._mock_polish(text, style), "模拟模式"
         
         style_prompts = {
@@ -282,7 +283,7 @@ async def process_text(request: TextRequest):
             processed_text=processed_text,
             ai_probability=detection_result["ai_probability"],
             processing_time=processing_time,
-            style_used=request.style,
+            style_used=request.style,  # 修复：现在request.style已经是str类型
             api_used=api_used
         )
         
