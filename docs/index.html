@@ -4,168 +4,605 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI学术润色系统</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .style-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .style-option {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .style-option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .style-option.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .style-option h3 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .style-option p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+
+        .result-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+        }
+
+        .result-text {
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e1e5e9;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">AI学术润色系统</h1>
-        
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <!-- 输入区域 -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">输入文本</label>
-                <textarea id="inputText" 
-                    class="w-full h-32 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="请输入需要润色的文本..."></textarea>
-            </div>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI学术润色系统</h1>
+            <p>基于DeepSeek-R1的专业文本润色服务</p>
+        </div>
 
-            <!-- 风格选择 -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">润色风格</label>
-                <select id="styleSelect" class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                    <option value="academic">学术论文</option>
-                    <option value="formal">正式文体</option>
-                    <option value="casual">通俗易懂</option>
-                    <option value="creative">创意表达</option>
-                </select>
-            </div>
-
-            <!-- 按钮区域 -->
-            <div class="flex gap-4 mb-6">
-                <button id="processBtn" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 disabled:opacity-50">
-                    开始润色
-                </button>
-                <button id="detectBtn" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700">
-                    AI检测
-                </button>
-            </div>
-
-            <!-- 进度提示 -->
-            <div id="progress" class="hidden mb-6">
-                <div class="flex items-center justify-center">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
-                    <span id="progressText" class="text-blue-600">🤔 AI正在深度思考中...</span>
+        <div class="main-content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="textInput">📝 请输入需要润色的文本</label>
+                    <textarea 
+                        id="textInput" 
+                        placeholder="在这里粘贴您的文本内容...&#10;&#10;例如：&#10;• 学术论文段落&#10;• 研究报告内容&#10;• 正式文档文本&#10;• 任何需要专业润色的内容"
+                        maxlength="10000"
+                    ></textarea>
+                    <small style="color: #666;">支持1-10000字符</small>
                 </div>
-            </div>
 
-            <!-- 结果区域 -->
-            <div id="result" class="hidden">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="font-semibold text-gray-700 mb-2">原文</h3>
-                        <div id="originalText" class="p-3 bg-gray-100 rounded-md min-h-32"></div>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-gray-700 mb-2">润色后</h3>
-                        <div id="processedText" class="p-3 bg-blue-50 rounded-md min-h-32"></div>
+                <div class="form-group">
+                    <label>🎨 选择润色风格</label>
+                    <div class="style-selector">
+                        <div class="style-option active" data-style="academic">
+                            <h3>📚 学术论文</h3>
+                            <p>提高专业性和严谨性</p>
+                        </div>
+                        <div class="style-option" data-style="formal">
+                            <h3>📋 正式文体</h3>
+                            <p>庄重得体的语言风格</p>
+                        </div>
+                        <div class="style-option" data-style="casual">
+                            <h3>💬 通俗易懂</h3>
+                            <p>简洁明了的表达方式</p>
+                        </div>
+                        <div class="style-option" data-style="creative">
+                            <h3>✨ 创意表达</h3>
+                            <p>新颖有趣的表达方式</p>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-4 text-sm text-gray-600">
-                    <span id="aiProbability"></span> | 
-                    <span id="processingTime"></span> | 
-                    <span id="apiUsed"></span>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="processBtn">
+                        🚀 开始润色
+                    </button>
+                    <button class="btn btn-secondary" id="detectBtn">
+                        🔍 AI检测
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn">
+                        🗑️ 清空内容
+                    </button>
                 </div>
-                <button id="copyBtn" class="mt-4 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700">
-                    复制结果
-                </button>
             </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p><strong>🧠 DeepSeek-R1 正在深度思考中...</strong></p>
+                <p>请耐心等待 10-20 秒，AI正在进行深度推理和润色</p>
+            </div>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <div class="result-title">✨ 润色结果</div>
+                    <button class="copy-btn" id="copyBtn">📋 复制结果</button>
+                </div>
+                
+                <div class="result-content">
+                    <div class="result-text" id="resultText"></div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="aiProbability">-</div>
+                        <div class="stat-label">AI检测概率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="processingTime">-</div>
+                        <div class="stat-label">处理时间(秒)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="styleUsed">-</div>
+                        <div class="stat-label">使用风格</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="apiUsed">-</div>
+                        <div class="stat-label">AI服务</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; color: white; opacity: 0.8; margin-top: 30px;">
+            <p>Powered by 🔥 火山引擎 DeepSeek-R1 | 🚀 FastAPI | ❤️ 开源项目</p>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000/api/v1';
+        // 配置API地址 - GitHub Pages部署时需要修改为实际后端地址
+        const API_BASE_URL = 'http://localhost:8000';
         
-        document.getElementById('processBtn').addEventListener('click', async () => {
-            const inputText = document.getElementById('inputText').value.trim();
-            const style = document.getElementById('styleSelect').value;
-            
-            if (!inputText) {
-                alert('请输入文本');
-                return;
-            }
-
-            showProgress('🤔 AI正在深度思考中...');
-            
-            try {
-                const response = await fetch(`${API_BASE}/process`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        content: inputText,
-                        style: style
-                    })
-                });
-
-                const result = await response.json();
-                showResult(result);
-            } catch (error) {
-                hideProgress();
-                alert('处理失败：' + error.message);
-            }
-        });
-
-        document.getElementById('detectBtn').addEventListener('click', async () => {
-            const inputText = document.getElementById('inputText').value.trim();
-            
-            if (!inputText) {
-                alert('请输入文本');
-                return;
-            }
-
-            showProgress('🔍 正在检测AI概率...');
-            
-            try {
-                const response = await fetch(`${API_BASE}/detect`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        content: inputText
-                    })
-                });
-
-                const result = await response.json();
-                alert(`AI生成概率: ${(result.ai_probability * 100).toFixed(1)}%`);
-                hideProgress();
-            } catch (error) {
-                hideProgress();
-                alert('检测失败：' + error.message);
-            }
-        });
-
-        document.getElementById('copyBtn').addEventListener('click', () => {
-            const text = document.getElementById('processedText').textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('已复制到剪贴板');
+        // DOM元素
+        const textInput = document.getElementById('textInput');
+        const processBtn = document.getElementById('processBtn');
+        const detectBtn = document.getElementById('detectBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loading = document.getElementById('loading');
+        const resultSection = document.getElementById('resultSection');
+        const resultText = document.getElementById('resultText');
+        const copyBtn = document.getElementById('copyBtn');
+        const styleOptions = document.querySelectorAll('.style-option');
+        
+        let selectedStyle = 'academic';
+        
+        // 风格选择
+        styleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                styleOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedStyle = option.dataset.style;
             });
         });
-
-        function showProgress(text) {
-            document.getElementById('progressText').textContent = text;
-            document.getElementById('progress').classList.remove('hidden');
-            document.getElementById('processBtn').disabled = true;
-            document.getElementById('result').classList.add('hidden');
-        }
-
-        function hideProgress() {
-            document.getElementById('progress').classList.add('hidden');
-            document.getElementById('processBtn').disabled = false;
-        }
-
-        function showResult(data) {
-            hideProgress();
+        
+        // 处理文本
+        processBtn.addEventListener('click', async () => {
+            const content = textInput.value.trim();
             
-            document.getElementById('originalText').textContent = data.original_text;
-            document.getElementById('processedText').textContent = data.processed_text;
-            document.getElementById('aiProbability').textContent = `AI概率: ${(data.ai_probability * 100).toFixed(1)}%`;
-            document.getElementById('processingTime').textContent = `处理时间: ${data.processing_time.toFixed(1)}秒`;
-            document.getElementById('apiUsed').textContent = `服务: ${data.api_used}`;
+            if (!content) {
+                alert('请输入要处理的文本内容');
+                return;
+            }
             
-            document.getElementById('result').classList.remove('hidden');
+            if (content.length > 10000) {
+                alert('文本长度不能超过10000字符');
+                return;
+            }
+            
+            try {
+                showLoading(true);
+                hideError();
+                
+                const response = await fetch(`${API_BASE_URL}/api/v1/process`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        style: selectedStyle
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                showResult(result);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(`处理失败: ${error.message}. 请检查后端服务是否正常运行。`);
+            } finally {
+                showLoading(false);
+            }
+        });
+        
+        // AI检测
+        detectBtn.addEventListener('click', async () => {
+            const content = textInput.value.trim();
+            
+            if (!content) {
+                alert('请输入要检测的文本内容');
+                return;
+            }
+            
+            try {
+                showLoading(true);
+                hideError();
+                
+                const response = await fetch(`${API_BASE_URL}/api/v1/detect`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: content
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                showDetectionResult(result);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError(`检测失败: ${error.message}`);
+            } finally {
+                showLoading(false);
+            }
+        });
+        
+        // 清空内容
+        clearBtn.addEventListener('click', () => {
+            textInput.value = '';
+            resultSection.classList.remove('show');
+            hideError();
+        });
+        
+        // 复制结果
+        copyBtn.addEventListener('click', () => {
+            const text = resultText.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                copyBtn.textContent = '✅ 已复制';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 复制结果';
+                }, 2000);
+            });
+        });
+        
+        // 显示加载状态
+        function showLoading(show) {
+            if (show) {
+                loading.classList.add('show');
+                processBtn.disabled = true;
+                detectBtn.disabled = true;
+                resultSection.classList.remove('show');
+            } else {
+                loading.classList.remove('show');
+                processBtn.disabled = false;
+                detectBtn.disabled = false;
+            }
         }
+        
+        // 显示结果
+        function showResult(result) {
+            resultText.textContent = result.processed_text;
+            document.getElementById('aiProbability').textContent = (result.ai_probability * 100).toFixed(1) + '%';
+            document.getElementById('processingTime').textContent = result.processing_time.toFixed(1) + 's';
+            document.getElementById('styleUsed').textContent = result.style_used || selectedStyle;
+            document.getElementById('apiUsed').textContent = result.api_used || 'DeepSeek-R1';
+            
+            resultSection.classList.add('show');
+        }
+        
+        // 显示检测结果
+        function showDetectionResult(result) {
+            resultText.textContent = `AI检测结果：\n\n检测概率: ${(result.ai_probability * 100).toFixed(1)}%\n置信度: ${result.confidence_level}\n\n详细分析：\n• 模式得分: ${(result.analysis.pattern_score * 100).toFixed(1)}%\n• 复杂度得分: ${(result.analysis.complexity_score * 100).toFixed(1)}%\n• 语义得分: ${(result.analysis.semantic_score * 100).toFixed(1)}%`;
+            
+            document.getElementById('aiProbability').textContent = (result.ai_probability * 100).toFixed(1) + '%';
+            document.getElementById('processingTime').textContent = result.processing_time.toFixed(1) + 's';
+            document.getElementById('styleUsed').textContent = 'AI检测';
+            document.getElementById('apiUsed').textContent = 'DeepSeek-R1';
+            
+            resultSection.classList.add('show');
+        }
+        
+        // 显示错误
+        function showError(message) {
+            const existingError = document.querySelector('.error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            
+            loading.parentNode.insertBefore(errorDiv, loading);
+        }
+        
+        // 隐藏错误
+        function hideError() {
+            const existingError = document.querySelector('.error');
+            if (existingError) {
+                existingError.remove();
+            }
+        }
+        
+        // 字符计数
+        textInput.addEventListener('input', () => {
+            const length = textInput.value.length;
+            const counter = document.querySelector('small');
+            if (counter) {
+                counter.textContent = `${length}/10000 字符`;
+                if (length > 10000) {
+                    counter.style.color = 'red';
+                } else {
+                    counter.style.color = '#666';
+                }
+            }
+        });
     </script>
 </body>
 </html>
