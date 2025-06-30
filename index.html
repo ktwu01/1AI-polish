@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI学术润色系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">AI学术润色系统</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <!-- 输入区域 -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">输入文本</label>
+                <textarea id="inputText" 
+                    class="w-full h-32 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="请输入需要润色的文本..."></textarea>
+            </div>
+
+            <!-- 风格选择 -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">润色风格</label>
+                <select id="styleSelect" class="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                    <option value="academic">学术论文</option>
+                    <option value="formal">正式文体</option>
+                    <option value="casual">通俗易懂</option>
+                    <option value="creative">创意表达</option>
+                </select>
+            </div>
+
+            <!-- 按钮区域 -->
+            <div class="flex gap-4 mb-6">
+                <button id="processBtn" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 disabled:opacity-50">
+                    开始润色
+                </button>
+                <button id="detectBtn" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700">
+                    AI检测
+                </button>
+            </div>
+
+            <!-- 进度提示 -->
+            <div id="progress" class="hidden mb-6">
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+                    <span id="progressText" class="text-blue-600">🤔 AI正在深度思考中...</span>
+                </div>
+            </div>
+
+            <!-- 结果区域 -->
+            <div id="result" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-gray-700 mb-2">原文</h3>
+                        <div id="originalText" class="p-3 bg-gray-100 rounded-md min-h-32"></div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-700 mb-2">润色后</h3>
+                        <div id="processedText" class="p-3 bg-blue-50 rounded-md min-h-32"></div>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <span id="aiProbability"></span> | 
+                    <span id="processingTime"></span> | 
+                    <span id="apiUsed"></span>
+                </div>
+                <button id="copyBtn" class="mt-4 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700">
+                    复制结果
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        
+        document.getElementById('processBtn').addEventListener('click', async () => {
+            const inputText = document.getElementById('inputText').value.trim();
+            const style = document.getElementById('styleSelect').value;
+            
+            if (!inputText) {
+                alert('请输入文本');
+                return;
+            }
+
+            showProgress('🤔 AI正在深度思考中...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/process`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: inputText,
+                        style: style
+                    })
+                });
+
+                const result = await response.json();
+                showResult(result);
+            } catch (error) {
+                hideProgress();
+                alert('处理失败：' + error.message);
+            }
+        });
+
+        document.getElementById('detectBtn').addEventListener('click', async () => {
+            const inputText = document.getElementById('inputText').value.trim();
+            
+            if (!inputText) {
+                alert('请输入文本');
+                return;
+            }
+
+            showProgress('🔍 正在检测AI概率...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/detect`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        content: inputText
+                    })
+                });
+
+                const result = await response.json();
+                alert(`AI生成概率: ${(result.ai_probability * 100).toFixed(1)}%`);
+                hideProgress();
+            } catch (error) {
+                hideProgress();
+                alert('检测失败：' + error.message);
+            }
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const text = document.getElementById('processedText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('已复制到剪贴板');
+            });
+        });
+
+        function showProgress(text) {
+            document.getElementById('progressText').textContent = text;
+            document.getElementById('progress').classList.remove('hidden');
+            document.getElementById('processBtn').disabled = true;
+            document.getElementById('result').classList.add('hidden');
+        }
+
+        function hideProgress() {
+            document.getElementById('progress').classList.add('hidden');
+            document.getElementById('processBtn').disabled = false;
+        }
+
+        function showResult(data) {
+            hideProgress();
+            
+            document.getElementById('originalText').textContent = data.original_text;
+            document.getElementById('processedText').textContent = data.processed_text;
+            document.getElementById('aiProbability').textContent = `AI概率: ${(data.ai_probability * 100).toFixed(1)}%`;
+            document.getElementById('processingTime').textContent = `处理时间: ${data.processing_time.toFixed(1)}秒`;
+            document.getElementById('apiUsed').textContent = `服务: ${data.api_used}`;
+            
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
