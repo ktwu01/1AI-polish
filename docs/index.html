@@ -426,15 +426,13 @@
                     <div class="result-text" id="resultText"></div>
                 </div>
 
-                <!-- 在result-content div后面添加 -->
+                <!-- 在 result-content div 后面添加 -->
                 <div class="reasoning-section" id="reasoningSection" style="display: none;">
                     <div class="reasoning-header">
                         <h3>🧠 AI思考过程</h3>
                         <button class="toggle-reasoning" id="toggleReasoning">展开思考过程</button>
                     </div>
-                    <div class="reasoning-content" id="reasoningContent">
-                        <!-- 思考过程内容 -->
-                    </div>
+                    <div class="reasoning-content" id="reasoningContent"></div>
                 </div>
 
                 <div class="stats">
@@ -602,20 +600,35 @@
                 detectBtn.disabled = false;
             }
         }
-        
-        // 显示结果函数中添加
+                
+        // 显示结果
         function showResult(result) {
-            resultText.textContent = result.processed_text;
+            console.log('收到结果:', result); // 调试日志
             
-            // 显示思考过程
+            resultText.textContent = result.processed_text || '处理结果为空';
+            
+            // 安全地获取数据，提供默认值
+            const aiProbability = result.ai_probability !== undefined ? 
+                (result.ai_probability * 100).toFixed(1) + '%' : '未知';
+            const processingTime = result.processing_time !== undefined ? 
+                result.processing_time.toFixed(1) + 's' : '未知';
+            const styleUsed = result.style_used || selectedStyle || '未知';
+            const apiUsed = result.api_used || 'DeepSeek-R1';
+            
+            document.getElementById('aiProbability').textContent = aiProbability;
+            document.getElementById('processingTime').textContent = processingTime;
+            document.getElementById('styleUsed').textContent = styleUsed;
+            document.getElementById('apiUsed').textContent = apiUsed;
+            
+            // 显示思考过程（如果有）
             if (result.reasoning_content) {
-                document.getElementById('reasoningContent').textContent = result.reasoning_content;
-                document.getElementById('reasoningSection').style.display = 'block';
-            } else {
-                document.getElementById('reasoningSection').style.display = 'none';
+                const reasoningSection = document.getElementById('reasoningSection');
+                if (reasoningSection) {
+                    document.getElementById('reasoningContent').textContent = result.reasoning_content;
+                    reasoningSection.style.display = 'block';
+                }
             }
             
-            // 其他显示逻辑...
             resultSection.classList.add('show');
         }
 
@@ -667,19 +680,38 @@
             }
         }
         
-        // 字符计数
-        textInput.addEventListener('input', () => {
-            const length = textInput.value.length;
-            const counter = document.querySelector('small');
-            if (counter) {
-                counter.textContent = `${length}/10000 字符`;
-                if (length > 10000) {
-                    counter.style.color = 'red';
-                } else {
-                    counter.style.color = '#666';
-                }
+    // 字符计数
+    textInput.addEventListener('input', () => {
+        const length = textInput.value.length;
+        const counter = document.querySelector('small');
+        if (counter) {
+            counter.textContent = `${length}/10000 字符`;
+            if (length > 10000) {
+                counter.style.color = 'red';
+            } else {
+                counter.style.color = '#666';
             }
-        });
+        }
+    });
+    
+    // 思考过程切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggleReasoning');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const content = document.getElementById('reasoningContent');
+                const button = document.getElementById('toggleReasoning');
+                
+                if (content.classList.contains('show')) {
+                    content.classList.remove('show');
+                    button.textContent = '展开思考过程';
+                } else {
+                    content.classList.add('show');
+                    button.textContent = '收起思考过程';
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>
