@@ -39,14 +39,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS中间件配置（适配Vue前端）
+# CORS中间件配置（适配所有前端）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # React开发服务器
-        "http://localhost:8080",  # Vue开发服务器
-        "http://localhost:5173",  # Vite开发服务器
-    ],
+    allow_origins=["*"],  # 开发阶段允许所有来源
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -123,12 +119,6 @@ async def get_styles():
 # 主要文本处理接口
 @app.post("/api/v1/process", response_model=ProcessResult)
 async def process_text(request: TextRequest):
-    """
-    文本润色处理接口
-    
-    - **content**: 要处理的文本内容 (1-10000字符)
-    - **style**: 润色风格 (academic/formal/casual/creative)
-    """
     # 确保风格不为空
     style = request.style or "academic"
     logger.info(f"🔄 处理请求: {len(request.content)}字符, 风格: {style}")
@@ -141,27 +131,21 @@ async def process_text(request: TextRequest):
         response = ProcessResult(
             original_text=request.content,
             processed_text=result["text"],
+            reasoning_content=result.get("reasoning", ""),  # 新增思考过程
             ai_probability=result["ai_score"],
             processing_time=result["processing_time"],
             style_used=style,
             api_used=result.get("api_used", "unknown")
         )
         
-        logger.info(f"✅ 处理完成: {result['processing_time']:.2f}s, AI概率: {result['ai_score']:.2f}")
+        logger.info(f"✅ 处理完成: {result['processing_time']:.2f}s")
         
         return response
         
     except Exception as e:
         logger.error(f"❌ 处理失败: {str(e)}")
-        raise HTTPException(
-            status_code=500, 
-            detail={
-                "error": "processing_failed",
-                "message": "文本处理失败，请稍后重试",
-                "details": str(e) if settings.debug else None
-            }
-        )
-
+        raise HTTPException(status_code=500, detail=f"处理失败: {str(e)}")
+    
 # AI检测接口
 @app.post("/api/v1/detect")
 async def detect_ai_text(request: TextRequest):

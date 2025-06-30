@@ -24,6 +24,7 @@ class TextRequest(BaseModel):
 class ProcessResult(BaseModel):
     original_text: str = Field(..., description="原始文本")
     processed_text: str = Field(..., description="处理后的文本")
+    reasoning_content: Optional[str] = Field(None, description="AI思考过程")  # 新增
     ai_probability: float = Field(..., ge=0.0, le=1.0, description="AI生成概率")
     processing_time: float = Field(..., ge=0.0, description="处理时间（秒）")
     style_used: Optional[str] = Field(None, description="使用的润色风格")

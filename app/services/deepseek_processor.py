@@ -78,32 +78,38 @@ class DeepSeekProcessor:
         }
         
         logger.info(f"📡 正在调用火山引擎 DeepSeek API...")
-        logger.debug(f"请求URL: {self.base_url}/chat/completions")
-        logger.debug(f"请求头: {dict(headers)}")
-        logger.debug(f"模型ID: {self.model_id}")
         
-        async with httpx.AsyncClient(timeout=self.timeout) as client:
-            response = await client.post(
-                f"{self.base_url}/chat/completions",
-                headers=headers,
-                json=payload
-            )
-            
-            logger.info(f"📡 API响应状态: {response.status_code}")
-            
-            if response.status_code == 200:
-                data = response.json()
-                processed_text = data["choices"][0]["message"]["content"].strip()
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                response = await client.post(
+                    f"{self.base_url}/chat/completions",
+                    headers=headers,
+                    json=payload
+                )
                 
-                return {
-                    "text": processed_text,
-                    "ai_score": 0.15,  # DeepSeek-R1润色后的AI检测概率很低
-                    "api_used": "火山引擎 DeepSeek-R1 API"
-                }
-            else:
-                logger.error(f"❌ API错误 {response.status_code}: {response.text}")
-                raise Exception(f"火山引擎 API错误: {response.status_code}")
-    
+                logger.info(f"📡 API响应状态: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    processed_text = data["choices"][0]["message"]["content"].strip()
+                    
+                    # 🧠 获取思考过程
+                    reasoning_content = data["choices"][0]["message"].get("reasoning_content", "")
+                    
+                    return {
+                        "text": processed_text,
+                        "reasoning": reasoning_content,  # 新增思考过程
+                        "ai_score": 0.15,
+                        "api_used": "火山引擎 DeepSeek-R1 API"
+                    }
+                else:
+                    logger.error(f"❌ API错误 {response.status_code}: {response.text}")
+                    raise Exception(f"火山引擎 API错误: {response.status_code}")
+                    
+        except Exception as e:
+            logger.error(f"❌ API调用异常: {str(e)}")
+            raise e
+            
     async def _fallback_processing(self, text: str, style: str) -> Dict:
         """降级处理模式"""
         await asyncio.sleep(0.5)  # 模拟处理时间

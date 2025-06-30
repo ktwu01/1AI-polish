@@ -189,6 +189,53 @@
             100% { transform: rotate(360deg); }
         }
 
+        .reasoning-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+        .reasoning-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .reasoning-header h3 {
+            margin: 0;
+            color: #28a745;
+        }
+
+        .toggle-reasoning {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .reasoning-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .reasoning-content.show {
+            display: block;
+        }
+
         .result-section {
             margin-top: 30px;
             padding: 20px;
@@ -379,6 +426,17 @@
                     <div class="result-text" id="resultText"></div>
                 </div>
 
+                <!-- 在result-content div后面添加 -->
+                <div class="reasoning-section" id="reasoningSection" style="display: none;">
+                    <div class="reasoning-header">
+                        <h3>🧠 AI思考过程</h3>
+                        <button class="toggle-reasoning" id="toggleReasoning">展开思考过程</button>
+                    </div>
+                    <div class="reasoning-content" id="reasoningContent">
+                        <!-- 思考过程内容 -->
+                    </div>
+                </div>
+
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-value" id="aiProbability">-</div>
@@ -407,7 +465,7 @@
 
     <script>
         // 配置API地址 - GitHub Pages部署时需要修改为实际后端地址
-        const API_BASE_URL = 'http://localhost:8000';
+        const API_BASE_URL = 'http://127.0.0.1:8000';  // 匹配您访问的地址
         
         // DOM元素
         const textInput = document.getElementById('textInput');
@@ -545,17 +603,36 @@
             }
         }
         
-        // 显示结果
+        // 显示结果函数中添加
         function showResult(result) {
             resultText.textContent = result.processed_text;
-            document.getElementById('aiProbability').textContent = (result.ai_probability * 100).toFixed(1) + '%';
-            document.getElementById('processingTime').textContent = result.processing_time.toFixed(1) + 's';
-            document.getElementById('styleUsed').textContent = result.style_used || selectedStyle;
-            document.getElementById('apiUsed').textContent = result.api_used || 'DeepSeek-R1';
             
+            // 显示思考过程
+            if (result.reasoning_content) {
+                document.getElementById('reasoningContent').textContent = result.reasoning_content;
+                document.getElementById('reasoningSection').style.display = 'block';
+            } else {
+                document.getElementById('reasoningSection').style.display = 'none';
+            }
+            
+            // 其他显示逻辑...
             resultSection.classList.add('show');
         }
-        
+
+        // 添加思考过程切换功能
+        document.getElementById('toggleReasoning').addEventListener('click', () => {
+            const content = document.getElementById('reasoningContent');
+            const button = document.getElementById('toggleReasoning');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                button.textContent = '展开思考过程';
+            } else {
+                content.classList.add('show');
+                button.textContent = '收起思考过程';
+            }
+        });
+                
         // 显示检测结果
         function showDetectionResult(result) {
             resultText.textContent = `AI检测结果：\n\n检测概率: ${(result.ai_probability * 100).toFixed(1)}%\n置信度: ${result.confidence_level}\n\n详细分析：\n• 模式得分: ${(result.analysis.pattern_score * 100).toFixed(1)}%\n• 复杂度得分: ${(result.analysis.complexity_score * 100).toFixed(1)}%\n• 语义得分: ${(result.analysis.semantic_score * 100).toFixed(1)}%`;
