@@ -1,91 +1,74 @@
-# AI学术润色系统
+# 🤖 AI学术润色系统
 
-> 为学生提供AI写作润色、查重检测和降重处理的一体化解决方案
+> 基于火山引擎 DeepSeek-R1 的专业文本润色、AI检测和风格转换服务
+
+![系统状态](https://img.shields.io/badge/状态-运行中-brightgreen)
+![GitHub Pages](https://img.shields.io/badge/前端-GitHub%20Pages-blue)
+![FastAPI](https://img.shields.io/badge/后端-FastAPI-009688)
+![DeepSeek-R1](https://img.shields.io/badge/AI-DeepSeek--R1-purple)
 
 ## 📋 项目概述
 
-本项目旨在解决国内学生使用AI写作但担心AI查重的矛盾需求，提供：
-- **AI文本润色** - 支持学术、正式、通俗、创意等多种风格
-- **AI检测功能** - 检测文本的AI生成概率
-- **安全可靠** - API密钥安全管理，支持多种AI服务商
+本项目为学生和研究人员提供AI文本润色服务，解决使用AI写作但担心AI查重的矛盾需求。
 
-## 🚀 技术栈
+### 🎯 核心功能
+- **🎨 多风格润色**：学术论文、正式文体、通俗易懂、创意表达
+- **🔍 AI检测分析**：检测文本的AI生成概率并提供详细分析
+- **🧠 思考过程展示**：显示DeepSeek-R1的深度推理过程
+- **📊 实时统计**：处理时间、AI概率、使用的服务等指标
 
-### 后端框架
-- **FastAPI** 0.104.1 - 现代、快速的Python Web框架
-- **Uvicorn** 0.24.0 - ASGI服务器
-- **SQLAlchemy** 2.0.23 - ORM数据库工具
-- **Pydantic** - 数据验证和设置管理
+### 🏗️ 系统架构
 
-### AI服务
-- **DeepSeek API** - 主要AI文本处理服务
-- **自研检测算法** - AI生成文本检测
+**混合部署架构**：
+- **前端**：GitHub Pages 静态托管
+- **后端**：本地 FastAPI 服务
+- **AI服务**：火山引擎 DeepSeek-R1 API
 
-### 开发工具
-- **Python** 3.13+ - 编程语言
-- **httpx** - 异步HTTP客户端
-- **python-dotenv** - 环境变量管理
-
-## 📁 项目结构
-
-```
-1AI-polish/
-├── app/                        # 主应用目录
-│   ├── __init__.py
-│   ├── main.py                 # 原始主应用（有SQLAlchemy依赖问题）
-│   ├── main_simple.py          # 简化版本（无数据库）
-│   ├── main_deepseek.py        # DeepSeek API集成版本（推荐）
-│   ├── api/                    # API路由模块
-│   │   ├── __init__.py
-│   │   ├── dependencies/
-│   │   │   └── __init__.py
-│   │   └── v1/
-│   │       ├── __init__.py
-│   │       └── endpoints.py    # API端点定义
-│   ├── core/                   # 核心配置模块
-│   │   ├── __init__.py
-│   │   └── config.py           # 应用配置
-│   ├── models/                 # 数据模型
-│   │   ├── __init__.py
-│   │   ├── database.py         # 数据库模型
-│   │   └── schemas.py          # Pydantic模型
-│   ├── services/               # 业务逻辑服务
-│   │   ├── __init__.py
-│   │   ├── ai_processor.py     # AI处理服务
-│   │   └── celery_app.py       # 异步任务配置
-│   └── utils/                  # 工具模块
-│       └── __init__.py
-├── tests/                      # 测试目录
-│   ├── __init__.py
-│   └── test_api.py             # API测试
-├── config/                     # 配置文件目录
-├── logs/                       # 日志目录
-├── fastapi_env/               # Python虚拟环境
-├── requirements.txt           # Python依赖
-├── .env                       # 环境变量（敏感信息）
-├── .gitignore                # Git忽略文件
-└── README.md                 # 项目文档
+```mermaid
+graph TB
+    A[用户浏览器] --> B[GitHub Pages 前端]
+    B --> C[本地 FastAPI 后端]
+    C --> D[火山引擎 DeepSeek-R1 API]
+    D --> C
+    C --> B
+    B --> A
 ```
 
-## ⚙️ 环境配置
+## 🚀 快速开始
 
-### Python环境
-- **Python版本**: 3.13.5
-- **虚拟环境**: `fastapi_env`
-- **包管理**: pip
+### 📋 前置要求
 
-### 已安装的包
-```
-fastapi==0.104.1
-uvicorn==0.24.0
-sqlalchemy==2.0.23
-python-dotenv==1.0.0
-typing-extensions>=4.0.0
-pydantic-settings==2.10.1
-httpx (最新版本)
+- **Python 3.11+**
+- **火山引擎账号**（用于DeepSeek-R1 API）
+- **Git**
+
+### 🔧 安装和配置
+
+#### 1. 克隆项目
+```bash
+git clone https://github.com/ktwu01/1AI-polish.git
+cd 1AI-polish
 ```
 
-### 环境变量 (.env)
+#### 2. 创建Python虚拟环境
+```bash
+# 创建虚拟环境
+python -m venv fastapi_env
+
+# 激活虚拟环境
+# macOS/Linux:
+source fastapi_env/bin/activate
+# Windows:
+# fastapi_env\Scripts\activate
+```
+
+#### 3. 安装依赖
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. 配置火山引擎API
+创建 `.env` 文件：
 ```bash
 # 应用配置
 APP_NAME="AI学术润色系统"
@@ -98,199 +81,312 @@ DATABASE_URL="sqlite:///./ai_processor.db"
 # Redis配置
 REDIS_URL="redis://localhost:6379"
 
-# AI服务配置
-DEEPSEEK_API_KEY=your_deepseek_api_key_here
-DEEPSEEK_BASE_URL=https://api.deepseek.com/v1
+# 火山引擎 DeepSeek-R1 API 配置
+ARK_API_KEY=你的火山引擎API密钥
+ARK_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+DEEPSEEK_MODEL_ID=deepseek-r1-250528
 ```
 
-## 🛠️ 安装与运行
+**获取火山引擎API密钥**：
+1. 访问 [火山引擎控制台](https://console.volcengine.com/)
+2. 开通 DeepSeek-R1 服务
+3. 获取API密钥并配置到 `.env` 文件
 
-### 1. 环境准备
+## 🎮 使用方法
+
+### 🚀 启动后端服务
+
+在项目根目录下运行：
 ```bash
-# 克隆项目
-cd 1AI-polish
+# 激活虚拟环境（如果还没激活）
+source fastapi_env/bin/activate
 
-# 激活虚拟环境
-source fastapi_env/bin/activate  # macOS/Linux
-
-# 安装依赖
-pip install -r requirements.txt
+# 启动FastAPI服务器
+uvicorn app.main_production:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2. 配置API密钥
+**成功启动后会显示**：
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000
+🚀 AI学术润色系统启动
+✅ 火山引擎 API: 已配置
+✅ 模型: deepseek-r1-250528
+```
+
+### 🌐 访问前端界面
+
+**方式1：在线访问**（推荐）
+- 访问：https://ktwu01.github.io/1AI-polish/
+- 前端会自动连接到您本地的FastAPI服务
+
+**方式2：本地访问**
 ```bash
-# 编辑环境变量文件
-nano .env
+# 在docs目录启动本地服务器
+cd docs
+python -m http.server 3000
 
-# 替换为您的实际DeepSeek API密钥
-DEEPSEEK_API_KEY=sk-your-actual-api-key-here
+# 访问：http://localhost:3000
 ```
 
-### 3. 启动服务
+### 📡 API接口使用
+
+#### 核心API端点
+
+**1. 文本润色** `POST /api/v1/process`
 ```bash
-# 方式1：使用DeepSeek集成版本（推荐）
-uvicorn app.main_deepseek:app --reload --host 0.0.0.0 --port 8000
-
-# 方式2：使用简化版本（测试用）
-uvicorn app.main_simple:app --reload --host 0.0.0.0 --port 8000
+curl -X POST "http://localhost:8000/api/v1/process" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "content": "人工智能技术在学术写作中的应用越来越广泛",
+       "style": "academic"
+     }'
 ```
 
-### 4. 访问服务
-- **主页**: http://localhost:8000
-- **API文档**: http://localhost:8000/docs
-- **替代文档**: http://localhost:8000/redoc
-
-## 🔧 API接口
-
-### 核心接口
-
-#### 1. 文本润色 `POST /api/v1/process`
-```json
-{
-  "content": "人工智能技术在学术写作中的应用越来越广泛",
-  "style": "academic"
-}
-```
-
-**响应**:
+**响应示例**：
 ```json
 {
   "original_text": "人工智能技术在学术写作中的应用越来越广泛",
-  "processed_text": "[学术润色] AI技术在学术写作中的应用越来越广泛",
-  "ai_probability": 0.25,
-  "processing_time": 0.8,
+  "processed_text": "人工智能技术在学术写作领域的应用日益普及...",
+  "reasoning_content": "用户要求将文本润色为学术风格...",
+  "ai_probability": 0.15,
+  "processing_time": 18.5,
   "style_used": "academic",
-  "api_used": "DeepSeek API"
+  "api_used": "火山引擎 DeepSeek-R1 API"
 }
 ```
 
-#### 2. AI检测 `POST /api/v1/detect`
-```json
-{
-  "content": "要检测的文本内容"
-}
-```
-
-#### 3. 获取风格列表 `GET /api/v1/styles`
-返回支持的润色风格列表
-
-#### 4. 健康检查 `GET /api/v1/health`
-服务状态检查
-
-### 支持的润色风格
-- `academic` - 学术论文风格
-- `formal` - 正式文体风格  
-- `casual` - 通俗易懂风格
-- `creative` - 创意表达风格
-
-## 🎯 核心功能
-
-### 1. AI文本润色
-- 集成DeepSeek API进行高质量文本润色
-- 支持多种写作风格转换
-- 智能保持原文含义
-- API故障时自动降级到备用模式
-
-### 2. AI检测算法
-- **模式匹配**: 检测AI写作常见句式
-- **复杂度分析**: 分析句子长度一致性
-- **结构检测**: 识别规律性写作特征
-- **综合评分**: 0-1概率值 + 置信度等级
-
-### 3. 安全特性
-- 环境变量管理API密钥
-- Git忽略敏感信息
-- CORS跨域支持
-- 错误处理和降级机制
-
-## 🚀 开发路线图
-
-### 已完成 ✅
-- [x] FastAPI基础框架搭建
-- [x] DeepSeek API集成
-- [x] AI检测算法实现
-- [x] 多风格润色支持
-- [x] 安全的配置管理
-- [x] API文档自动生成
-
-### 进行中 🔄
-- [ ] SQLAlchemy数据库集成修复
-- [ ] 用户认证系统
-- [ ] 处理历史记录
-- [ ] 异步任务队列(Celery)
-
-### 计划中 📋
-- [ ] 前端Vue.js界面开发
-- [ ] 用户注册登录功能
-- [ ] 批量文本处理
-- [ ] 更多AI服务商集成
-- [ ] 性能优化和缓存
-- [ ] 部署和监控
-
-## 🧪 测试
-
-### 运行测试
+**2. AI检测** `POST /api/v1/detect`
 ```bash
-# 运行所有测试
+curl -X POST "http://localhost:8000/api/v1/detect" \
+     -H "Content-Type: application/json" \
+     -d '{"content": "要检测的文本内容"}'
+```
+
+**3. 获取支持的风格** `GET /api/v1/styles`
+```bash
+curl http://localhost:8000/api/v1/styles
+```
+
+**4. 批量处理** `POST /api/v1/batch`
+```bash
+curl -X POST "http://localhost:8000/api/v1/batch" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "texts": [
+         {"content": "第一段文本", "style": "academic"},
+         {"content": "第二段文本", "style": "formal"}
+       ]
+     }'
+```
+
+**5. 健康检查** `GET /api/v1/health`
+```bash
+curl http://localhost:8000/api/v1/health
+```
+
+#### 支持的润色风格
+
+| 风格ID | 风格名称 | 描述 | 适用场景 |
+|--------|----------|------|----------|
+| `academic` | 学术论文 | 提高专业性和严谨性 | 学术论文、研究报告 |
+| `formal` | 正式文体 | 庄重得体的语言风格 | 商务文档、正式场合 |
+| `casual` | 通俗易懂 | 简洁明了的表达方式 | 科普文章、一般阅读 |
+| `creative` | 创意表达 | 新颖有趣的表达方式 | 创意写作、营销文案 |
+
+## 📁 项目结构
+
+```
+1AI-polish/
+├── app/                        # 后端应用
+│   ├── __init__.py
+│   ├── main_production.py      # 生产版主程序 ⭐
+│   ├── main_debug.py          # 调试版主程序
+│   ├── api/                   # API路由
+│   │   └── v1/
+│   │       └── endpoints.py   # API端点定义
+│   ├── core/                  # 核心配置
+│   │   └── config.py         # 应用配置
+│   ├── models/                # 数据模型
+│   │   ├── database.py       # 数据库模型
+│   │   └── schemas.py        # Pydantic模型
+│   ├── services/              # 业务服务
+│   │   ├── deepseek_processor.py  # DeepSeek处理器 ⭐
+│   │   └── celery_app.py     # 异步任务
+│   └── utils/                 # 工具模块
+├── docs/                      # 前端文件
+│   └── index.html            # 前端界面 ⭐
+├── tests/                     # 测试文件
+├── fastapi_env/              # Python虚拟环境
+├── requirements.txt          # Python依赖
+├── .env                      # 环境变量（需要创建）
+├── .gitignore               # Git忽略文件
+└── README.md                # 项目文档
+```
+
+## 🔧 开发指南
+
+### 🛠️ 本地开发
+
+1. **启动后端服务**：
+```bash
+uvicorn app.main_production:app --reload --host 0.0.0.0 --port 8000
+```
+
+2. **启动前端服务**：
+```bash
+cd docs
+python -m http.server 3000
+```
+
+3. **查看API文档**：
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc: http://localhost:8000/redoc
+
+### 🧪 测试
+
+```bash
+# 运行测试
 pytest tests/ -v
 
-# 测试特定文件
-pytest tests/test_api.py -v
+# 测试API端点
+curl http://localhost:8000/api/v1/health
 ```
 
-### 手动测试
-1. 访问 http://localhost:8000/docs
-2. 展开 `POST /api/v1/process` 接口
-3. 点击 "Try it out"
-4. 输入测试数据并执行
+### 📊 日志查看
 
-## 🔍 故障排除
+后端启动时会显示详细日志：
+```
+2025-06-30 19:55:55,517 - app.main_production - INFO - 🚀 AI学术润色系统启动
+2025-06-30 19:55:55,517 - app.main_production - INFO - ✅ 火山引擎 API: 已配置
+2025-06-30 19:55:55,517 - app.main_production - INFO - ✅ 模型: deepseek-r1-250528
+```
+
+## 🌐 部署
+
+### 🏠 本地部署（当前模式）
+
+**优势**：
+- ✅ API密钥安全（不会暴露到公网）
+- ✅ 完全免费
+- ✅ 响应速度快
+- ✅ 完全控制
+
+**使用方法**：
+1. 本地启动FastAPI服务
+2. 访问GitHub Pages前端
+3. 前端自动连接本地后端
+
+### ☁️ 云端部署（可选）
+
+如需完全云端部署，可以使用：
+
+**Render（推荐）**：
+1. 在Render中创建Web Service
+2. 连接GitHub仓库
+3. 配置环境变量
+4. 更新前端API地址
+
+**其他平台**：
+- Vercel
+- Railway
+- Heroku
+- Fly.io
+
+## ⚠️ 注意事项
+
+### 🔒 安全提醒
+- **不要**将 `.env` 文件提交到Git仓库
+- **不要**在前端代码中硬编码API密钥
+- API密钥应妥善保管，不要分享给他人
+
+### 🚀 性能说明
+- DeepSeek-R1 处理时间通常为10-30秒
+- 复杂文本需要更长处理时间
+- 建议前端显示进度提示
+
+### 💰 费用说明
+- 火山引擎提供免费额度
+- 超出免费额度后按使用量计费
+- 建议监控API使用量
+
+## 🐛 故障排除
 
 ### 常见问题
 
-1. **端口被占用**
-   ```bash
-   lsof -i :8000
-   kill -9 [PID]
-   ```
+**1. API调用失败**
+```bash
+# 检查API密钥配置
+cat .env | grep ARK_API_KEY
 
-2. **API密钥未配置**
-   - 检查 `.env` 文件中的 `DEEPSEEK_API_KEY`
-   - 服务会自动降级到模拟模式
+# 测试API连接
+curl -X POST "https://ark.cn-beijing.volces.com/api/v3/chat/completions" \
+     -H "Authorization: Bearer 你的API密钥" \
+     -H "Content-Type: application/json" \
+     -d '{"model": "deepseek-r1-250528", "messages": [{"role": "user", "content": "测试"}]}'
+```
 
-3. **SQLAlchemy兼容性问题**
-   - 使用 `main_deepseek.py` 替代 `main.py`
-   - 或升级SQLAlchemy版本
+**2. 前端无法连接后端**
+```bash
+# 检查后端是否运行
+curl http://localhost:8000/api/v1/health
 
-4. **依赖安装失败**
-   ```bash
-   pip install --upgrade pip
-   pip install -r requirements.txt --force-reinstall
-   ```
+# 检查端口占用
+lsof -i :8000
+```
 
-## 🤝 开发团队
+**3. 虚拟环境问题**
+```bash
+# 重新创建虚拟环境
+rm -rf fastapi_env
+python -m venv fastapi_env
+source fastapi_env/bin/activate
+pip install -r requirements.txt
+```
 
-- **后端开发**: AI学术润色核心功能
-- **前端开发**: Vue.js用户界面（计划中）
-- **产品设计**: 用户体验和需求调研
-- **算法优化**: AI检测算法改进
+## 🤝 贡献指南
+
+欢迎提交Issue和Pull Request！
+
+### 开发流程
+1. Fork本仓库
+2. 创建特性分支
+3. 提交更改
+4. 创建Pull Request
+
+### 代码规范
+- Python代码遵循PEP 8
+- 提交消息使用中文
+- 添加适当的注释和文档
 
 ## 📝 更新日志
 
-### v1.0.0 (当前版本)
-- 初始版本发布
-- DeepSeek API集成
-- 基础润色和检测功能
-- API文档和安全配置
+### v1.0.0 (2025-06-30)
+- ✅ 完成DeepSeek-R1 API集成
+- ✅ 实现多风格文本润色功能
+- ✅ 添加AI检测分析
+- ✅ 支持思考过程显示
+- ✅ 混合部署架构（GitHub Pages + 本地FastAPI）
+- ✅ 完善的前端界面
 
 ## 📄 许可证
 
-本项目为教育和研究目的开发，请遵守相关AI服务的使用条款。
+本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
 
 ## 📞 联系方式
 
-如有问题或建议，请联系开发团队。
+- **项目地址**：https://github.com/ktwu01/1AI-polish
+- **在线演示**：https://ktwu01.github.io/1AI-polish/
+- **问题反馈**：[GitHub Issues](https://github.com/ktwu01/1AI-polish/issues)
+
+## 🙏 致谢
+
+- **火山引擎**：提供DeepSeek-R1 API服务
+- **FastAPI**：优秀的Python Web框架
+- **GitHub Pages**：免费的静态网站托管
+- **所有贡献者**：感谢每一位参与项目的开发者
 
 ---
 
-**注意**: 请确保API密钥的安全，不要将 `.env` 文件提交到代码仓库。
+**🎉 开始您的AI学术润色之旅吧！**
+
+> 如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！
