@@ -671,13 +671,18 @@
         document.getElementById('toggleReasoning').addEventListener('click', () => {
             const content = document.getElementById('reasoningContent');
             const button = document.getElementById('toggleReasoning');
-            
+            console.log('toggleReasoning clicked');
+            console.log('content:', content);
+            console.log('button:', button);
+            console.log('content.classList:', content.classList);
             if (content.classList.contains('show')) {
                 content.classList.remove('show');
                 button.textContent = '展开思考过程';
+                console.log('收起思考过程');
             } else {
                 content.classList.add('show');
                 button.textContent = '收起思考过程';
+                console.log('展开思考过程');
             }
         });
                 
@@ -729,24 +734,24 @@
         }
     });
     
-    // 思考过程切换功能
-    document.addEventListener('DOMContentLoaded', function() {
-        const toggleBtn = document.getElementById('toggleReasoning');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                const content = document.getElementById('reasoningContent');
-                const button = document.getElementById('toggleReasoning');
+    // // 思考过程切换功能
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const toggleBtn = document.getElementById('toggleReasoning');
+    //     if (toggleBtn) {
+    //         toggleBtn.addEventListener('click', () => {
+    //             const content = document.getElementById('reasoningContent');
+    //             const button = document.getElementById('toggleReasoning');
                 
-                if (content.classList.contains('show')) {
-                    content.classList.remove('show');
-                    button.textContent = '展开思考过程';
-                } else {
-                    content.classList.add('show');
-                    button.textContent = '收起思考过程';
-                }
-            });
-        }
-    });
+    //             if (content.classList.contains('show')) {
+    //                 content.classList.remove('show');
+    //                 button.textContent = '展开思考过程';
+    //             } else {
+    //                 content.classList.add('show');
+    //                 button.textContent = '收起思考过程';
+    //             }
+    //         });
+    //     }
+    // });
     </script>
 </body>
 </html>
