@@ -20,9 +20,15 @@
 ### 🏗️ 系统架构
 
 **混合部署架构**：
-- **前端**：GitHub Pages 静态托管
-- **后端**：本地 FastAPI 服务
+- **前端**：本地部署/GitHub Pages 静态托管。
+	- [] 目前正在开发 Render 部署模块。
+- **后端**：FastAPI 服务 + Celery异步任务 + Redis缓存。
 - **AI服务**：火山引擎 DeepSeek-R1 API
+- [] **算法模块**：
+	- [] 文本生成：OpenAI GPT-4 / Claude / GLM
+	- [] AI检测：GPTZero、OpenAI Detect、自己训练的RoBERTa/BERT模型
+	- [] 改写降重：结合句法改写 + Embedding相似度控制（Contrastive Tuning）
+	- [] 数据安全合规：本地运行选项 / 云端临时缓存自动删除
 
 ```mermaid
 graph TB
@@ -35,6 +41,7 @@ graph TB
 ```
 
 ## 🚀 快速开始
+- [] 目前正在开发 Render 部署模块。开发完成 Render 后，即可以线上部署，不需要此模块。
 
 ### 📋 前置要求
 
