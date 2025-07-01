@@ -9,15 +9,18 @@
 
 [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.md)
 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README.CN.md)
-[![GitHub stars](https://img.shields.io/github/stars/ktwu01/AI-polish)](https://github.com/ktwu01/AI-polish)
-[![GitHub forks](https://img.shields.io/github/forks/ktwu01/AI-polish)](https://github.com/ktwu01/AI-polish/fork)
+[![GitHub stars](https://img.shields.io/github/stars/ktwu01/1AI-polish)](https://github.com/ktwu01/1AI-polish)
+[![GitHub forks](https://img.shields.io/github/forks/ktwu01/1AI-polish)](https://github.com/ktwu01/1AI-polish/fork)
 
 ## 📋 项目概述
 
 本项目为学生和研究人员提供AI文本润色服务，解决使用AI写作但担心AI查重的矛盾需求。
 
 ### **[立即访问网站：](https://ktwu01.github.io/1AI-polish)**
+
 ![AI-polish-1](./assets/Screenshot-AI-polish.png)
+
+使用示例：
 ![AI-polish-example](./assets/Screenshot-AI-polish-example.png)
 
 ### 🎯 核心功能
