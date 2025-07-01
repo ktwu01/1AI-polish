@@ -197,6 +197,20 @@
             border-left: 4px solid #28a745;
         }
 
+        .demo-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .demo-warning h4 {
+            margin: 0 0 8px 0;
+            color: #d68910;
+        }
+        
         .reasoning-header {
             display: flex;
             justify-content: space-between;
@@ -627,6 +641,19 @@
                     document.getElementById('reasoningContent').textContent = result.reasoning_content;
                     reasoningSection.style.display = 'block';
                 }
+            }
+            
+
+            // 检测是否为演示模式
+            if (result.api_used && result.api_used.includes('演示模式')) {
+                // 显示演示模式警告
+                const warning = document.createElement('div');
+                warning.className = 'demo-warning';
+                warning.innerHTML = `
+                    <h4>⚠️ 演示模式</h4>
+                    <p>当前运行在演示模式下，结果为模拟数据。要使用真实的DeepSeek-R1 API，请配置API密钥。</p>
+                `;
+                resultSection.insertBefore(warning, resultSection.firstChild);
             }
             
             resultSection.classList.add('show');

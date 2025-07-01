@@ -23,18 +23,18 @@ class DeepSeekProcessor:
         
         if not self.api_key:
             logger.warning("⚠️ ARK API Key未配置，将使用模拟模式")
-    
+
     async def process_text(self, text: str, style: str = "academic") -> Dict:
         """处理文本的主要方法"""
         start_time = time.time()
         
         try:
-            if self.api_key:
+            if self.api_key and len(self.api_key) > 10:  # 确保API Key有效
                 result = await self._call_ark_api(text, style)
-                logger.info("✅ 使用火山引擎 DeepSeek API处理成功")
+                logger.info("✅ 使用DeepSeek API处理成功")
             else:
+                logger.warning("⚠️ API Key无效，使用降级模式")
                 result = await self._fallback_processing(text, style)
-                logger.info("⚠️ 使用降级模式处理")
                 
         except Exception as e:
             logger.error(f"❌ API调用失败: {e}")
@@ -44,9 +44,10 @@ class DeepSeekProcessor:
         
         return {
             "text": result["text"],
+            "reasoning": result.get("reasoning", ""),
             "ai_score": result.get("ai_score", 0.3),
             "processing_time": end_time - start_time,
-            "api_used": result.get("api_used", "fallback"),
+            "api_used": result.get("api_used", "未知"),  # 保持原始的api_used
             "style_used": style
         }
     
