@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI学术润色系统</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -618,8 +619,8 @@
         // 显示结果
         function showResult(result) {
             console.log('收到结果:', result); // 调试日志
-            
-            resultText.textContent = result.processed_text || '处理结果为空';
+            // resultText.textContent = result.processed_text || '处理结果为空';
+            resultText.innerHTML = marked.parse(result.processed_text || '处理结果为空');
             
             // 安全地获取数据，提供默认值
             const aiProbability = result.ai_probability !== undefined ? 
@@ -627,7 +628,7 @@
             const processingTime = result.processing_time !== undefined ? 
                 result.processing_time.toFixed(1) + 's' : '未知';
             const styleUsed = result.style_used || selectedStyle || '未知';
-            const apiUsed = result.api_used || 'DeepSeek-R1';
+            const apiUsed = result.api_used || '未知';
             
             document.getElementById('aiProbability').textContent = aiProbability;
             document.getElementById('processingTime').textContent = processingTime;
@@ -635,11 +636,18 @@
             document.getElementById('apiUsed').textContent = apiUsed;
             
             // 显示思考过程（如果有）
-            if (result.reasoning_content) {
+            const reasoningContent = result.reasoning_content || result.reasoning || '';
+            if (reasoningContent) {
                 const reasoningSection = document.getElementById('reasoningSection');
                 if (reasoningSection) {
-                    document.getElementById('reasoningContent').textContent = result.reasoning_content;
+                    document.getElementById('reasoningContent').innerHTML = marked.parse(reasoningContent);
                     reasoningSection.style.display = 'block';
+                }
+            } else {
+                const reasoningSection = document.getElementById('reasoningSection');
+                if (reasoningSection) {
+                    reasoningSection.style.display = 'none';
+                    document.getElementById('reasoningContent').innerHTML = '';
                 }
             }
             

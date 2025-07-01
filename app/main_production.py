@@ -124,28 +124,66 @@ async def process_text(request: TextRequest):
     logger.info(f"🔄 处理请求: {len(request.content)}字符, 风格: {style}")
     
     try:
+        # 调用AI处理 - 添加详细日志和验证
+        logger.debug(f"开始处理文本，长度: {len(request.content)}，风格: {style}")
+        
+        # 添加输入验证
+        if not request.content or not isinstance(request.content, str):
+            logger.error("无效的输入内容")
+            raise HTTPException(status_code=400, detail="输入内容不能为空且必须是字符串")
+        
+        if style not in ["academic", "formal", "casual", "creative"]:
+            logger.warning(f"未知风格: {style}，将使用默认学术风格")
+            style = "academic"
+        
         # 调用AI处理
         result = await deepseek_processor.process_text(request.content, style)
         
-        # 构建响应
-        response = ProcessResult(
-            original_text=request.content,
-            processed_text=result["text"],
-            reasoning_content=result.get("reasoning", ""),  # 新增思考过程
-            ai_probability=result["ai_score"],
-            processing_time=result["processing_time"],
-            style_used=style,
-            api_used=result.get("api_used", "unknown")
+        # 验证结果结构
+        required_keys = ["text", "ai_score", "processing_time"]
+        if not all(key in result for key in required_keys):
+            missing = [k for k in required_keys if k not in result]
+            logger.error(f"AI返回结果缺少必要字段: {missing}")
+            raise HTTPException(status_code=502, detail="AI服务返回无效响应")
+        
+        # 构建响应 - 添加更严格的类型检查
+        try:
+            response = ProcessResult(
+                original_text=request.content,
+                processed_text=str(result["text"]),  # 确保是字符串
+                reasoning_content=str(result.get("reasoning", "无")),  # 默认值更明确
+                ai_probability=float(result["ai_score"]),  # 确保是浮点数
+                processing_time=float(result["processing_time"]),  # 确保是浮点数
+                style_used=style,
+                api_used=str(result.get("api_used", "unknown"))  # 确保是字符串
+            )
+        except (ValueError, TypeError) as e:
+            logger.error(f"响应数据转换错误: {str(e)}")
+            raise HTTPException(status_code=502, detail="AI服务返回数据格式错误")
+        
+        # 添加详细的成功日志
+        logger.info(
+            f"✅ 处理完成 - 字符数: {len(request.content)}→{len(response.processed_text)} "
+            f"耗时: {response.processing_time:.2f}s "
+            f"AI概率: {response.ai_probability:.2f}"
         )
         
-        logger.info(f"✅ 处理完成: {result['processing_time']:.2f}s")
+        # 返回响应前添加调试日志
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"完整响应: {response.json(exclude={'original_text'})[:200]}...")
         
         return response
         
+    except HTTPException:
+        raise  # 直接抛出已有的HTTP异常
+        
     except Exception as e:
-        logger.error(f"❌ 处理失败: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"处理失败: {str(e)}")
-    
+        logger.exception("处理过程中出现未预期错误")  # 这会记录完整的堆栈跟踪
+        raise HTTPException(
+            status_code=500,
+            detail=f"处理失败: {str(e)}"
+        )
+
 # AI检测接口
 @app.post("/api/v1/detect")
 async def detect_ai_text(request: TextRequest):
