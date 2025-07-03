@@ -60,3 +60,13 @@ def test_invalid_text_request():
     long_text = "a" * 20000
     response = client.post("/api/v1/process", json={"content": long_text})
     assert response.status_code == 422
+
+def test_invalid_style_request():
+    """测试无效风格参数"""
+    test_data = {
+        "content": "测试文本",
+        "style": "unknown"
+    }
+
+    response = client.post("/api/v1/process", json=test_data)
+    assert response.status_code == 422
