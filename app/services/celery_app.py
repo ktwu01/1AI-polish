@@ -6,10 +6,10 @@ celery_app = Celery(
     "ai_processor",
     broker=settings.redis_url,
     backend=settings.redis_url,
-    include=['app.services.tasks']
+    include=['app.services.celery_app']
 )
 
-# Celery配置设置
+# Celery配置
 celery_app.conf.update(
     task_serializer='json',
     accept_content=['json'],
@@ -17,7 +17,7 @@ celery_app.conf.update(
     timezone='UTC',
     enable_utc=True,
     task_routes={
-        'app.services.tasks.long_text_processing': 'long-running',
+        'app.services.celery_app.long_text_processing': 'long-running',
     }
 )
 
