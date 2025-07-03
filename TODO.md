@@ -1,10 +1,9 @@
 debug：
 copilot
 
-index.html
-没法展开reasoning_content。
+如果操作上没有问题，即使VS code 报错，也不要去修改code。
 
-你告诉我怎么修改。我在哪个文件里添加debug 调试输出 然后返回输出给你。
+0.15这个值需要在cmd+shft+F里面修改。。。
 
 本地修改 
 
