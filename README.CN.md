@@ -219,7 +219,7 @@ curl http://localhost:8000/api/v1/health
 ├── app/                        # 后端应用
 │   ├── __init__.py
 │   ├── main_production.py      # 生产版主程序 ⭐
-│   ├── main_debug.py          # 调试版主程序
+│   ├── main.py                # 本地开发主程序
 │   ├── api/                   # API路由
 │   │   └── v1/
 │   │       └── endpoints.py   # API端点定义

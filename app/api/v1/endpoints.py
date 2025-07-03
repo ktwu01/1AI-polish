@@ -6,7 +6,7 @@ import hashlib
 from app.models.schemas import TextRequest, ProcessResult, AsyncTaskResponse
 from app.models.database import get_db, ProcessingHistory
 from app.services.ai_processor import ai_processor
-from app.services.celery_app import long_text_processing
+from app.services.celery_app import celery_app, long_text_processing
 
 router = APIRouter()
 
@@ -77,7 +77,7 @@ async def async_process_text(
 async def get_task_status(task_id: str):
     """查询异步任务状态"""
     try:
-        task = long_text_processing.AsyncResult(task_id)
+        task = celery_app.AsyncResult(task_id)
         
         if task.state == 'PENDING':
             return {"task_id": task_id, "status": "pending", "message": "任务等待中"}
