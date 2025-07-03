@@ -19,6 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+TODO.md
 
 # Virtual Environment
 fastapi_env/
