@@ -1,4 +1,5 @@
 # AI学术润色系统
+![AI-polish Banner](assets/Banner-AI-polish.png)
 
 > 基于火山引擎 DeepSeek-R1 的专业文本润色、AI检测和风格转换服务
 
