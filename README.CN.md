@@ -33,9 +33,8 @@
 ### 🏗️ 系统架构
 
 **混合部署架构**：
-- **前端**：本地部署/GitHub Pages 静态托管。
-	- [] 目前正在开发 Render 部署模块。
-- **后端**：FastAPI 服务 + Celery异步任务 + Redis缓存。
+- **前端**：本地部署/GitHub Pages 前端静态托管。
+- **后端**：本地部署/Render 后端部署模块。FastAPI 服务 + Celery异步任务 + Redis缓存。
 - **AI服务**：火山引擎 DeepSeek-R1 API
 - [] **算法模块**：
 	- [] 文本生成：OpenAI GPT-4 / Claude / GLM
@@ -54,7 +53,7 @@ graph TB
 ```
 
 ## 🚀 快速开始
-- [] 目前正在开发 Render 部署模块。开发完成 Render 后，即可以线上部署，不需要此模块。
+- [x] 目前已经开发 Render 部署模块。可以线上部署。
 
 ### 📋 前置要求
 
