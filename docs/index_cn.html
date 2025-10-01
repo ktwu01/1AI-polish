@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Academic Polishing System</title>
+    <title>AI学术润色系统</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
@@ -211,7 +211,7 @@
             margin: 0 0 8px 0;
             color: #d68910;
         }
-
+        
         .reasoning-header {
             display: flex;
             justify-content: space-between;
@@ -352,19 +352,19 @@
             .container {
                 padding: 15px;
             }
-
+            
             .main-content {
                 padding: 20px;
             }
-
+            
             .header h1 {
                 font-size: 2rem;
             }
-
+            
             .button-group {
                 flex-direction: column;
             }
-
+            
             .btn {
                 width: 100%;
             }
@@ -374,80 +374,78 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>AI Academic Polishing System</h1>
-            <p>Professional text polishing powered by DeepSeek-R1</p>
-            <div style="margin-top: 15px;">
-                <button class="btn btn-secondary" onclick="window.location.href='index_cn.html';">🌏 查看中文版</button>
-            </div>
+            <h1>AI学术润色系统</h1>
+            <p>基于DeepSeek-R1的专业文本润色服务</p>
         </div>
 
         <div class="main-content">
             <div class="input-section">
                 <div class="form-group">
-                    <label for="textInput">📝 Please enter the text to polish</label>
-                    <textarea
-                        id="textInput"
-                        placeholder="Paste your text here...&#10;&#10;For example:&#10;• Academic paper paragraphs&#10;• Research report content&#10;• Formal document text&#10;• Any content that needs professional polishing"
+                    <label for="textInput">📝 请输入需要润色的文本</label>
+                    <textarea 
+                        id="textInput" 
+                        placeholder="在这里粘贴您的文本内容...&#10;&#10;例如：&#10;• 学术论文段落&#10;• 研究报告内容&#10;• 正式文档文本&#10;• 任何需要专业润色的内容"
                         maxlength="10000"
                     ></textarea>
-                    <small style="color: #666;">Supports 1-10000 characters</small>
+                    <small style="color: #666;">支持1-10000字符</small>
                 </div>
 
                 <div class="form-group">
-                    <label>🎨 Choose a polishing style</label>
+                    <label>🎨 选择润色风格</label>
                     <div class="style-selector">
                         <div class="style-option active" data-style="academic">
-                            <h3>📚 Academic Paper</h3>
-                            <p>Enhance professionalism and rigor</p>
+                            <h3>📚 学术论文</h3>
+                            <p>提高专业性和严谨性</p>
                         </div>
                         <div class="style-option" data-style="formal">
-                            <h3>📋 Formal Writing</h3>
-                            <p>Dignified and appropriate language style</p>
+                            <h3>📋 正式文体</h3>
+                            <p>庄重得体的语言风格</p>
                         </div>
                         <div class="style-option" data-style="casual">
-                            <h3>💬 Easy to Understand</h3>
-                            <p>Concise and clear expression</p>
+                            <h3>💬 通俗易懂</h3>
+                            <p>简洁明了的表达方式</p>
                         </div>
                         <div class="style-option" data-style="creative">
-                            <h3>✨ Creative Expression</h3>
-                            <p>Novel and engaging expression</p>
+                            <h3>✨ 创意表达</h3>
+                            <p>新颖有趣的表达方式</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="button-group">
                     <button class="btn btn-primary" id="processBtn">
-                        🚀 Start Polishing
+                        🚀 开始润色
                     </button>
                     <button class="btn btn-secondary" id="detectBtn">
-                        🔍 AI Detection
+                        🔍 AI检测
                     </button>
                     <button class="btn btn-secondary" id="clearBtn">
-                        🗑️ Clear Content
+                        🗑️ 清空内容
                     </button>
                 </div>
             </div>
 
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p><strong>🧠 DeepSeek-R1 is deeply thinking...</strong></p>
-                <p>Please wait 10-20 seconds while the AI performs deep reasoning and polishing</p>
+                <p><strong>🧠 DeepSeek-R1 正在深度思考中...</strong></p>
+                <p>请耐心等待 10-20 秒，AI正在进行深度推理和润色</p>
             </div>
 
             <div class="result-section" id="resultSection">
                 <div class="result-header">
-                    <div class="result-title">✨ Polishing Result</div>
-                    <button class="copy-btn" id="copyBtn">📋 Copy Result</button>
+                    <div class="result-title">✨ 润色结果</div>
+                    <button class="copy-btn" id="copyBtn">📋 复制结果</button>
                 </div>
-
+                
                 <div class="result-content">
                     <div class="result-text" id="resultText"></div>
                 </div>
 
+                <!-- 在 result-content div 后面添加 -->
                 <div class="reasoning-section" id="reasoningSection" style="display: none;">
                     <div class="reasoning-header">
-                        <h3>🧠 Reasoning Process</h3>
-                        <button class="toggle-reasoning" id="toggleReasoning">Expand reasoning process</button>
+                        <h3>🧠 AI思考过程</h3>
+                        <button class="toggle-reasoning" id="toggleReasoning">展开思考过程</button>
                     </div>
                     <div class="reasoning-content" id="reasoningContent"></div>
                 </div>
@@ -455,43 +453,47 @@
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-value" id="aiProbability">-</div>
-                        <div class="stat-label">AI Probability</div>
+                        <div class="stat-label">AI检测概率</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="processingTime">-</div>
-                        <div class="stat-label">Processing Time</div>
+                        <div class="stat-label">处理时间(秒)</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="styleUsed">-</div>
-                        <div class="stat-label">Style Used</div>
+                        <div class="stat-label">使用风格</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="apiUsed">-</div>
-                        <div class="stat-label">API Used</div>
+                        <div class="stat-label">AI服务</div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div style="text-align: center; color: white; opacity: 0.8; margin-top: 30px;">
-            <p>Powered by 🔥 Volcano Engine DeepSeek-R1 | 🚀 FastAPI</p>
+            <p>Powered by 🔥 火山引擎 DeepSeek-R1 | 🚀 FastAPI</p>
         </div>
     </div>
 
     <script>
-        // Configure API address - update to the actual backend address when deploying on GitHub Pages
-        const API_BASE_URL = 'https://oneai-polish.onrender.com';  // Match the address you are accessing
-
+        // 配置API地址 - GitHub Pages部署时需要修改为实际后端地址
+        const API_BASE_URL = 'https://oneai-polish.onrender.com';  // 匹配您访问的地址
+        
+        // DOM元素
         const textInput = document.getElementById('textInput');
         const processBtn = document.getElementById('processBtn');
         const detectBtn = document.getElementById('detectBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const copyBtn = document.getElementById('copyBtn');
         const loading = document.getElementById('loading');
         const resultSection = document.getElementById('resultSection');
         const resultText = document.getElementById('resultText');
+        const copyBtn = document.getElementById('copyBtn');
         const styleOptions = document.querySelectorAll('.style-option');
+        
         let selectedStyle = 'academic';
-
+        
+        // 风格选择
         styleOptions.forEach(option => {
             option.addEventListener('click', () => {
                 styleOptions.forEach(opt => opt.classList.remove('active'));
@@ -499,25 +501,25 @@
                 selectedStyle = option.dataset.style;
             });
         });
-
-        // Start polishing
+        
+        // 处理文本
         processBtn.addEventListener('click', async () => {
             const content = textInput.value.trim();
-
+            
             if (!content) {
-                alert('Please enter text to polish');
+                alert('请输入要处理的文本内容');
                 return;
             }
-
+            
             if (content.length > 10000) {
-                alert('Text length cannot exceed 10000 characters');
+                alert('文本长度不能超过10000字符');
                 return;
             }
-
+            
             try {
                 showLoading(true);
                 hideError();
-
+                
                 const response = await fetch(`${API_BASE_URL}/api/v1/process`, {
                     method: 'POST',
                     headers: {
@@ -528,35 +530,35 @@
                         style: selectedStyle
                     })
                 });
-
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-
+                
                 const result = await response.json();
                 showResult(result);
-
+                
             } catch (error) {
                 console.error('Error:', error);
-                showError(`Processing failed: ${error.message}. Please check if the backend service is running normally.`);
+                showError(`处理失败: ${error.message}. 请检查后端服务是否正常运行。`);
             } finally {
                 showLoading(false);
             }
         });
-
-        // AI detection
+        
+        // AI检测
         detectBtn.addEventListener('click', async () => {
             const content = textInput.value.trim();
-
+            
             if (!content) {
-                alert('Please enter the text to analyze');
+                alert('请输入要检测的文本内容');
                 return;
             }
-
+            
             try {
                 showLoading(true);
                 hideError();
-
+                
                 const response = await fetch(`${API_BASE_URL}/api/v1/detect`, {
                     method: 'POST',
                     headers: {
@@ -566,41 +568,41 @@
                         content: content
                     })
                 });
-
+                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-
+                
                 const result = await response.json();
                 showDetectionResult(result);
-
+                
             } catch (error) {
                 console.error('Error:', error);
-                showError(`Detection failed: ${error.message}`);
+                showError(`检测失败: ${error.message}`);
             } finally {
                 showLoading(false);
             }
         });
-
-        // Clear content
+        
+        // 清空内容
         clearBtn.addEventListener('click', () => {
             textInput.value = '';
             resultSection.classList.remove('show');
             hideError();
         });
-
-        // Copy result
+        
+        // 复制结果
         copyBtn.addEventListener('click', () => {
             const text = resultText.textContent;
             navigator.clipboard.writeText(text).then(() => {
-                copyBtn.textContent = '✅ Copied';
+                copyBtn.textContent = '✅ 已复制';
                 setTimeout(() => {
-                    copyBtn.textContent = '📋 Copy Result';
+                    copyBtn.textContent = '📋 复制结果';
                 }, 2000);
             });
         });
-
-        // Show loading state
+        
+        // 显示加载状态
         function showLoading(show) {
             if (show) {
                 loading.classList.add('show');
@@ -613,27 +615,27 @@
                 detectBtn.disabled = false;
             }
         }
-
-        // Display result
+                
+        // 显示结果
         function showResult(result) {
-            console.log('Received result:', result); // Debug log
-            // resultText.textContent = result.processed_text || 'Processing result is empty';
-            resultText.innerHTML = marked.parse(result.processed_text || 'Processing result is empty');
-
-            // Safely get data with default values
-            const aiProbability = result.ai_probability !== undefined ?
-                (result.ai_probability * 100).toFixed(1) + '%' : 'Unknown';
-            const processingTime = result.processing_time !== undefined ?
-                result.processing_time.toFixed(1) + 's' : 'Unknown';
-            const styleUsed = result.style_used || selectedStyle || 'Unknown';
-            const apiUsed = result.api_used || 'Unknown';
-
+            console.log('收到结果:', result); // 调试日志
+            // resultText.textContent = result.processed_text || '处理结果为空';
+            resultText.innerHTML = marked.parse(result.processed_text || '处理结果为空');
+            
+            // 安全地获取数据，提供默认值
+            const aiProbability = result.ai_probability !== undefined ? 
+                (result.ai_probability * 100).toFixed(1) + '%' : '未知';
+            const processingTime = result.processing_time !== undefined ? 
+                result.processing_time.toFixed(1) + 's' : '未知';
+            const styleUsed = result.style_used || selectedStyle || '未知';
+            const apiUsed = result.api_used || '未知';
+            
             document.getElementById('aiProbability').textContent = aiProbability;
             document.getElementById('processingTime').textContent = processingTime;
             document.getElementById('styleUsed').textContent = styleUsed;
             document.getElementById('apiUsed').textContent = apiUsed;
-
-            // Display reasoning process (if available)
+            
+            // 显示思考过程（如果有）
             const reasoningContent = result.reasoning_content || result.reasoning || '';
             if (reasoningContent) {
                 const reasoningSection = document.getElementById('reasoningSection');
@@ -648,24 +650,24 @@
                     document.getElementById('reasoningContent').innerHTML = '';
                 }
             }
+            
 
-
-            // Check if it is demo mode
-            if (result.api_used && (result.api_used.includes('Demo Mode') || result.api_used.includes('\u6f14\u793a\u6a21\u5f0f'))) {
-                // Show demo mode warning
+            // 检测是否为演示模式
+            if (result.api_used && result.api_used.includes('演示模式')) {
+                // 显示演示模式警告
                 const warning = document.createElement('div');
                 warning.className = 'demo-warning';
                 warning.innerHTML = `
-                    <h4>⚠️ Demo Mode</h4>
-                    <p>Currently running in demo mode; the results are simulated. To use the real DeepSeek-R1 API, please configure the API key.</p>
+                    <h4>⚠️ 演示模式</h4>
+                    <p>当前运行在演示模式下，结果为模拟数据。要使用真实的DeepSeek-R1 API，请配置API密钥。</p>
                 `;
                 resultSection.insertBefore(warning, resultSection.firstChild);
             }
-
+            
             resultSection.classList.add('show');
         }
 
-        // Add reasoning toggle functionality
+        // 添加思考过程切换功能
         document.getElementById('toggleReasoning').addEventListener('click', () => {
             const content = document.getElementById('reasoningContent');
             const button = document.getElementById('toggleReasoning');
@@ -675,55 +677,55 @@
             console.log('content.classList:', content.classList);
             if (content.classList.contains('show')) {
                 content.classList.remove('show');
-                button.textContent = 'Expand reasoning process';
-                console.log('Collapse reasoning process');
+                button.textContent = '展开思考过程';
+                console.log('收起思考过程');
             } else {
                 content.classList.add('show');
-                button.textContent = 'Collapse reasoning process';
-                console.log('Expand reasoning process');
+                button.textContent = '收起思考过程';
+                console.log('展开思考过程');
             }
         });
-
-        // Display detection result
+                
+        // 显示检测结果
         function showDetectionResult(result) {
-            resultText.textContent = `AI Detection Result:\n\nDetection Probability: ${(result.ai_probability * 100).toFixed(1)}%\nConfidence: ${result.confidence_level}\n\nDetailed Analysis:\n• Pattern Score: ${(result.analysis.pattern_score * 100).toFixed(1)}%\n• Complexity Score: ${(result.analysis.complexity_score * 100).toFixed(1)}%\n• Semantic Score: ${(result.analysis.semantic_score * 100).toFixed(1)}%`;
-
+            resultText.textContent = `AI检测结果：\n\n检测概率: ${(result.ai_probability * 100).toFixed(1)}%\n置信度: ${result.confidence_level}\n\n详细分析：\n• 模式得分: ${(result.analysis.pattern_score * 100).toFixed(1)}%\n• 复杂度得分: ${(result.analysis.complexity_score * 100).toFixed(1)}%\n• 语义得分: ${(result.analysis.semantic_score * 100).toFixed(1)}%`;
+            
             document.getElementById('aiProbability').textContent = (result.ai_probability * 100).toFixed(1) + '%';
             document.getElementById('processingTime').textContent = result.processing_time.toFixed(1) + 's';
-            document.getElementById('styleUsed').textContent = 'AI Detection';
+            document.getElementById('styleUsed').textContent = 'AI检测';
             document.getElementById('apiUsed').textContent = 'DeepSeek-R1';
-
+            
             resultSection.classList.add('show');
         }
-
-        // Show error
+        
+        // 显示错误
         function showError(message) {
             const existingError = document.querySelector('.error');
             if (existingError) {
                 existingError.remove();
             }
-
+            
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error';
             errorDiv.textContent = message;
-
+            
             loading.parentNode.insertBefore(errorDiv, loading);
         }
-
-        // Hide error
+        
+        // 隐藏错误
         function hideError() {
             const existingError = document.querySelector('.error');
             if (existingError) {
                 existingError.remove();
             }
         }
-
-    // Character counter
+        
+    // 字符计数
     textInput.addEventListener('input', () => {
         const length = textInput.value.length;
         const counter = document.querySelector('small');
         if (counter) {
-            counter.textContent = `${length}/10000 characters`;
+            counter.textContent = `${length}/10000 字符`;
             if (length > 10000) {
                 counter.style.color = 'red';
             } else {
@@ -731,21 +733,21 @@
             }
         }
     });
-
-    // // Reasoning toggle feature
+    
+    // // 思考过程切换功能
     // document.addEventListener('DOMContentLoaded', function() {
     //     const toggleBtn = document.getElementById('toggleReasoning');
     //     if (toggleBtn) {
     //         toggleBtn.addEventListener('click', () => {
     //             const content = document.getElementById('reasoningContent');
     //             const button = document.getElementById('toggleReasoning');
-
+                
     //             if (content.classList.contains('show')) {
     //                 content.classList.remove('show');
-    //                 button.textContent = 'Expand reasoning process';
+    //                 button.textContent = '展开思考过程';
     //             } else {
     //                 content.classList.add('show');
-    //                 button.textContent = 'Collapse reasoning process';
+    //                 button.textContent = '收起思考过程';
     //             }
     //         });
     //     }
@@ -753,4 +755,3 @@
     </script>
 </body>
 </html>
-
