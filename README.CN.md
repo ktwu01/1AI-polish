@@ -12,25 +12,26 @@
 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README.CN.md)
 [![GitHub stars](https://img.shields.io/github/stars/ktwu01/1AI-polish)](https://github.com/ktwu01/1AI-polish)
 [![GitHub forks](https://img.shields.io/github/forks/ktwu01/1AI-polish)](https://github.com/ktwu01/1AI-polish/fork)
+![cc-by-nc-nd](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)
 
-## 📋 项目概述
+## 项目概述
 
 本项目为学生和研究人员提供AI文本润色服务，解决使用AI写作但担心AI查重的矛盾需求。
 
-### **[立即访问网站：](https://ktwu01.github.io/1AI-polish)**
+# **[立即访问网站：](https://ktwu01.github.io/1AI-polish)**
 
 ![AI-polish-1](./assets/Screenshot-AI-polish.png)
 
 使用示例：
 ![AI-polish-example](./assets/Screenshot-AI-polish-example.png)
 
-### 🎯 核心功能
-- **🎨 多风格润色**：学术论文、正式文体、通俗易懂、创意表达
-- **🔍 AI检测分析**：检测文本的AI生成概率并提供详细分析
-- **🧠 思考过程展示**：显示DeepSeek-R1的深度推理过程
-- **📊 实时统计**：处理时间、AI概率、使用的服务等指标
+### 核心功能
+- **多风格润色**：学术论文、正式文体、通俗易懂、创意表达
+- **AI检测分析**：检测文本的AI生成概率并提供详细分析
+- **思考过程展示**：显示DeepSeek-R1的深度推理过程
+- **实时统计**：处理时间、AI概率、使用的服务等指标
 
-### 🏗️ 系统架构
+### 系统架构
 
 **混合部署架构**：
 - **前端**：本地部署/GitHub Pages 前端静态托管。
@@ -52,16 +53,16 @@ graph TB
     B --> A
 ```
 
-## 🚀 快速开始
+## 快速开始
 - [x] 目前已经开发 Render 部署模块。可以线上部署。
 
-### 📋 前置要求
+### 前置要求
 
 - **Python 3.11+**
 - **火山引擎账号**（用于DeepSeek-R1 API）
 - **Git**
 
-### 🔧 安装和配置
+### 安装和配置
 
 #### 1. 克隆项目
 ```bash
@@ -111,9 +112,9 @@ DEEPSEEK_MODEL_ID=deepseek-r1-250528
 2. 开通 DeepSeek-R1 服务
 3. 获取API密钥并配置到 `.env` 文件
 
-## 🎮 使用方法
+## 使用方法
 
-### 🚀 启动后端服务
+### 启动后端服务
 
 在项目根目录下运行：
 ```bash
@@ -132,7 +133,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000
 ✅ 模型: deepseek-r1-250528
 ```
 
-### 🌐 访问前端界面
+### 访问前端界面
 
 **方式1：在线访问**（推荐）
 - 访问：https://ktwu01.github.io/1AI-polish/
@@ -147,7 +148,7 @@ python -m http.server 5500
 # 访问：http://localhost:5500
 ```
 
-### 📡 API接口使用
+### API接口使用
 
 #### 核心API端点
 
@@ -212,7 +213,7 @@ curl http://localhost:8000/api/v1/health
 | `casual` | 通俗易懂 | 简洁明了的表达方式 | 科普文章、一般阅读 |
 | `creative` | 创意表达 | 新颖有趣的表达方式 | 创意写作、营销文案 |
 
-## 📁 项目结构
+## 项目结构
 
 ```
 1AI-polish/
@@ -242,9 +243,9 @@ curl http://localhost:8000/api/v1/health
 └── README.md                # 项目文档
 ```
 
-## 🔧 开发指南
+## 开发指南
 
-### 🛠️ 本地开发
+### 本地开发
 
 1. **启动后端服务**：
 ```bash
@@ -261,7 +262,7 @@ python -m http.server 5500
    - Swagger UI: http://localhost:8000/docs
    - ReDoc: http://localhost:8000/redoc
 
-### 🧪 测试
+### 测试
 
 ```bash
 # 运行测试
@@ -271,7 +272,7 @@ pytest tests/ -v
 curl http://localhost:8000/api/v1/health
 ```
 
-### 📊 日志查看
+### 日志查看
 
 后端启动时会显示详细日志：
 ```
@@ -280,22 +281,22 @@ curl http://localhost:8000/api/v1/health
 2025-06-30 19:55:55,517 - app.main_production - INFO - ✅ 模型: deepseek-r1-250528
 ```
 
-## 🌐 部署
+## 部署
 
-### 🏠 本地部署（当前模式）
+### 本地部署（当前模式）
 
 **优势**：
-- ✅ API密钥安全（不会暴露到公网）
-- ✅ 完全免费
-- ✅ 响应速度快
-- ✅ 完全控制
+- API密钥安全（不会暴露到公网）
+- 完全免费
+- 响应速度快
+- 完全控制
 
 **使用方法**：
 1. 本地启动FastAPI服务
 2. 访问GitHub Pages前端
 3. 前端自动连接本地后端
 
-### ☁️ 云端部署（可选）
+### 云端部署（可选）
 
 如需完全云端部署，可以使用：
 
@@ -311,24 +312,24 @@ curl http://localhost:8000/api/v1/health
 - Heroku
 - Fly.io
 
-## ⚠️ 注意事项
+## 注意事项
 
-### 🔒 安全提醒
+### 安全提醒
 - **不要**将 `.env` 文件提交到Git仓库
 - **不要**在前端代码中硬编码API密钥
 - API密钥应妥善保管，不要分享给他人
 
-### 🚀 性能说明
+### 性能说明
 - DeepSeek-R1 处理时间通常为10-30秒
 - 复杂文本需要更长处理时间
 - 建议前端显示进度提示
 
-### 💰 费用说明
+### 费用说明
 - 火山引擎提供免费额度
 - 超出免费额度后按使用量计费
 - 建议监控API使用量
 
-## 🐛 故障排除
+## 故障排除
 
 ### 常见问题
 
@@ -362,7 +363,7 @@ source fastapi_env/bin/activate
 pip install -r requirements.txt
 ```
 
-## 🤝 贡献指南
+## 贡献指南
 
 欢迎提交Issue和Pull Request！
 
@@ -377,27 +378,27 @@ pip install -r requirements.txt
 - 提交消息使用中文
 - 添加适当的注释和文档
 
-## 📝 更新日志
+## 更新日志
 
 ### v1.0.0 (2025-06-30)
-- ✅ 完成DeepSeek-R1 API集成
-- ✅ 实现多风格文本润色功能
-- ✅ 添加AI检测分析
-- ✅ 支持思考过程显示
-- ✅ 混合部署架构（GitHub Pages + 本地FastAPI）
-- ✅ 完善的前端界面
+- 完成DeepSeek-R1 API集成
+- 实现多风格文本润色功能
+- 添加AI检测分析
+- 支持思考过程显示
+- 混合部署架构（GitHub Pages + 本地FastAPI）
+- 完善的前端界面
 
-## 📄 许可证
+## 许可证
 
 本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
 
-## 📞 联系方式
+## 联系方式
 
 - **项目地址**：https://github.com/ktwu01/1AI-polish
 - **在线演示**：https://ktwu01.github.io/1AI-polish/
 - **问题反馈**：[GitHub Issues](https://github.com/ktwu01/1AI-polish/issues)
 
-## 🙏 致谢
+## 致谢
 
 - **火山引擎**：提供DeepSeek-R1 API服务
 - **FastAPI**：优秀的Python Web框架
@@ -406,6 +407,6 @@ pip install -r requirements.txt
 
 ---
 
-**🎉 开始您的AI学术润色之旅吧！**
+**开始您的AI学术润色之旅吧！**
 
-> 如果这个项目对您有帮助，请给个 ⭐ Star 支持一下！
+> 如果这个项目对您有帮助，请给个 Star 支持一下！
