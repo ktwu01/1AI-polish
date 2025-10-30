@@ -1,8 +1,8 @@
-[Demo](https://ktwu01.github.io/1AI-polish)
-
-Please see 请看 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README.CN.md)
-
 # 1AI-polish
+# [Demo](https://ktwu01.github.io/1AI-polish)
+
+Detailed README: please see 详细的介绍请看 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README.CN.md)
+
 ![AI-polish Banner](assets/Banner-AI-polish.png)
 
 [![GitHub stars](https://img.shields.io/github/stars/ktwu01/1AI-polish)](https://github.com/ktwu01/1AI-polish)
