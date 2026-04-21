@@ -4,6 +4,6 @@ python-multipart==0.0.22
 pydantic>=2.7.0,<3.0.0
 pydantic-settings==2.10.1
 httpx==0.25.2
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 starlette>=0.27.0  # 从 main 分支新增
 typing-extensions>=4.0.0  # 从 main 分支新增
