@@ -1,23 +1,30 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from app.api.v1 import endpoints
 
-client = TestClient(app)
 
-def test_root():
+@pytest.fixture(scope="module")
+def client():
+    """Run application lifespan hooks for database setup and cleanup."""
+    with TestClient(app) as test_client:
+        yield test_client
+
+
+def test_root(client):
     """测试根路径"""
     response = client.get("/")
     assert response.status_code == 200
     assert "message" in response.json()
 
-def test_health_check():
+def test_health_check(client):
     """测试健康检查"""
     response = client.get("/api/v1/health")
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "healthy"
 
-def test_process_text():
+def test_process_text(client):
     """测试文本处理接口"""
     test_data = {
         "content": "人工智能技术在学术写作中的应用越来越广泛。",
@@ -35,8 +42,17 @@ def test_process_text():
     assert data["ai_probability"] >= 0.0
     assert data["ai_probability"] <= 1.0
 
-def test_async_process_text():
+def test_async_process_text(client, monkeypatch):
     """测试异步文本处理接口"""
+    class StubTask:
+        id = "test-task-id"
+
+    monkeypatch.setattr(
+        endpoints.long_text_processing,
+        "delay",
+        lambda *args, **kwargs: StubTask()
+    )
+
     test_data = {
         "content": "这是一个测试文本，用于验证异步处理功能。",
         "style": "formal"
@@ -50,7 +66,7 @@ def test_async_process_text():
     assert "status" in data
     assert data["status"] == "processing"
 
-def test_invalid_text_request():
+def test_invalid_text_request(client):
     """测试无效请求"""
     # 空文本测试
     response = client.post("/api/v1/process", json={"content": ""})
@@ -61,7 +77,7 @@ def test_invalid_text_request():
     response = client.post("/api/v1/process", json={"content": long_text})
     assert response.status_code == 422
 
-def test_invalid_style_request():
+def test_invalid_style_request(client):
     """测试无效风格参数"""
     test_data = {
         "content": "测试文本",
